@@ -1,15 +1,34 @@
+
 class Solution {
     public int[][] merge(int[][] intervals) {
-        Arrays.sort(intervals,(a,b)-> a[0] - b[0]);
-        ArrayList<int[]> ans= new ArrayList<>();
-        for (int[] interval : intervals){
-            if(ans.isEmpty() || ans.get(ans.size()-1)[1]<interval[0]){
-                ans.add(interval);
-            }
-            else{
-                ans.get(ans.size()-1)[1]=Math.max(ans.get(ans.size()-1)[1],interval[1]);
+
+        if (intervals == null || intervals.length <= 1) {
+            return intervals;
+        }
+
+        // Sort intervals based on starting time
+        Arrays.sort(intervals, Comparator.comparingInt(a -> a[0]));
+
+        List<int[]> result = new ArrayList<>();
+
+        int[] t = intervals[0];
+
+        for (int i = 1; i < intervals.length; i++) {
+
+            int[] c = intervals[i];
+
+            if (c[0] <= t[1]) {
+                // Merge overlapping intervals
+                t[1] = Math.max(t[1], c[1]);
+            } 
+            else {
+                result.add(t);
+                t = c;
             }
         }
-        return ans.toArray(new int[ans.size()][]);
+
+        result.add(t);
+
+        return result.toArray(new int[result.size()][]);
     }
 }
